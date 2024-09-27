@@ -61,6 +61,32 @@ body {
     background-position: -15px -15px;
 }
 
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(#343b3c 1.25px, transparent 0);
+    background-size: 13px 13px;
+    background-position: -15px -15px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.container:hover::before {
+    opacity: 1;
+}
+
+.dot {
+    position: absolute;
+    background: #343b3c;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
 .header {
     font-family: "Space Mono", monospace;
     font-size: 2rem;
@@ -77,19 +103,20 @@ button {
     font-family: 'Space Mono', monospace;
     font-size: 1.2rem;
     padding: .08 rem 2rem;
-    background-color: var(--accent-color);
-    color: var(--bg-color);
-    border: none;
-    border-radius: 50px; 
+    background-color: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
     cursor: pointer;
     text-transform: lowercase;
     letter-spacing: 0.1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-    background-color: var(--text-color);
-    box-shadow: 0 0 15px var(--text-color);
-    transform: scale(1.05);
+    background-color: rgba(108, 132, 132, .2);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
 }
 
 .volume-bar {
@@ -117,27 +144,23 @@ button:hover {
     height: 10px;
     background: linear-gradient(to right, var(--accent-color) 0%, var(--secondary-color) 100%);
     outline: none;
-    border-radius: 5px;
 }
 
 #volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     background: var(--text-color);
     cursor: pointer;
-    border-radius: 50%;
-    box-shadow: 0 0 5px var(--text-color);
 }
 
 #volume-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     background: var(--text-color);
     cursor: pointer;
-    border-radius: 50%;
-    box-shadow: 0 0 5px var(--text-color);
+    border: none;
 }
 
 @media (max-width: 600px) {
