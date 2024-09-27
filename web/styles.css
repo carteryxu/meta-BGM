@@ -1,0 +1,71 @@
+:root {
+    --bg-color: #1f1f1f;
+    --text-color: #f2c17b;
+    --accent-color: #ff6b6b;
+    --secondary-color: #4ecdc4;
+}
+
+.space-mono-regular {
+    font-family: "Space Mono", monospace;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .space-mono-bold {
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-style: normal;
+  }
+  
+  .space-mono-regular-italic {
+    font-family: "Space Mono", monospace;
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .space-mono-bold-italic {
+    font-family: "Space Mono", monospace;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: "Space Mono", monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 107, .1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(78, 205, 196,.1) 0%, transparent 20%);
+}
+
+.container {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(26, 26, 26, .8);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2)
+}
+
+.header {
+    font-family: "Space Mono", monospace;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: .02em;
+    text-shadow: 2px 2px 4px rgba(255, 107, 107, .5);
+}
+
+.button {
+    margin-bottom: 2rem;
+}
+
+button {
+
+}
