@@ -1,8 +1,8 @@
 :root {
     --bg-color: #1f1f1f;
     --text-color: #f2c17b;
-    --accent-color: #ff6b6b;
-    --secondary-color: #4ecdc4;
+    --accent-color: #6c8484;
+    --secondary-color: #cfd8ef
 }
 
 .space-mono-regular {
@@ -47,11 +47,18 @@ body {
 }
 
 .container {
-    text-align: center;
+    text-align: left;
     padding: 2rem;
+    position: absolute;
+    top: 75%;
+    left: 20%;
+    transform: translate(-50%, -50%);
     background: rgba(26, 26, 26, .8);
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2)
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    background-image: radial-gradient(#343b3c 1.25px, transparent 0);
+    background-size: 13px 13px;
+    background-position: -15px -15px;
 }
 
 .header {
@@ -67,5 +74,83 @@ body {
 }
 
 button {
-
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    padding: .08 rem 2rem;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    border-radius: 50px; 
+    cursor: pointer;
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
 }
+
+button:hover {
+    background-color: var(--text-color);
+    box-shadow: 0 0 15px var(--text-color);
+    transform: scale(1.05);
+}
+
+.volume-bar {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#volume-slider-container {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+}
+
+#current-volume-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+}
+
+#volume-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, var(--accent-color) 0%, var(--secondary-color) 100%);
+    outline: none;
+    border-radius: 5px;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--text-color);
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--text-color);
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--text-color);
+}
+
+@media (max-width: 600px) {
+    .header {
+        font-size:3rem;
+    }
+    h2 {
+        font-size: 1rem;
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+    }
+}
+
