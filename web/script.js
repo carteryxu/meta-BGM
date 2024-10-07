@@ -5,6 +5,29 @@ const App = () => {
     const [volume, setVolume] = useState(100);
     const containerRef = useRef(null);
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+    const audioContext = useRef(null);
+    const playSound = useRef(null);
+    const pauseSound = useRef(null);
+
+    useEffect(() => {
+        audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Load play sound
+        fetch('/audio/vinylstart.mp3')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.current.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                playSound.current = audioBuffer;
+            });
+
+        // Load pause sound
+        fetch('/audio/vinylstop.mp3')
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.current.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                pauseSound.current = audioBuffer;
+            });
+    }, []);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -57,7 +80,21 @@ const App = () => {
         return () => window.removeEventListener('resize', updateContainerSize);
     }, []);
 
+    const playAudioEffect = (buffer) => {
+        if (buffer && audioContext.current) {
+            const source = audioContext.current.createBufferSource();
+            source.buffer = buffer;
+            source.connect(audioContext.current.destination);
+            source.start();
+        }
+    };
+
     const togglePlayPause = () => {
+        if (isPlaying) {
+            playAudioEffect(pauseSound.current);
+        } else {
+            playAudioEffect(playSound.current);
+        }
         setIsPlaying(!isPlaying);
     };
 
