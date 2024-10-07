@@ -25,10 +25,14 @@ const App = () => {
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 const maxDistance = 100;
-                const scale = Math.max(1, 1 + (1 - Math.min(distance, maxDistance) / maxDistance) * 1.5);
-                dot.style.transform = `scale(${scale})`;
+                if (distance < maxDistance) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
             });
         };
+
         container.addEventListener('mousemove', updateDots);
         return () => container.removeEventListener('mousemove', updateDots);
     }, []);
@@ -41,8 +45,49 @@ const App = () => {
         setVolume(Number(e.target.value));
     };
 
+    const containerStyle = {
+        textAlign: 'left',
+        padding: '2rem',
+        position: 'fixed',
+        bottom: '4rem',
+        left: '5rem',
+        width: '90%',
+        maxWidth: '500px',
+    };
+
+    const mobileStyle = window.matchMedia('(max-width: 600px)').matches
+        ? {
+              bottom: '1rem',
+              left: '1rem',
+              right: '1rem',
+              width: 'calc(100% - 2rem)',
+              maxWidth: 'none',
+          }
+        : {};
+
+    const buttonStyle = {
+        fontFamily: "'Space Mono', monospace",
+        textAlign: 'center',
+        fontSize: '1.2rem',
+        padding: '0px',
+        backgroundColor: 'transparent',
+        color: 'var(--text-color)',
+        border: '3px solid var(--accent-color)',
+        cursor: 'pointer',
+        textTransform: 'lowercase',
+        letterSpacing: '0.1em',
+        transition: 'all 0.3s ease',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        width: '120px',  
+        height: '45px',  
+    };
+
     return (
-        <div className="container" ref={containerRef}>
+        <div 
+            className="container" 
+            ref={containerRef} 
+            style={{...containerStyle, ...mobileStyle}}
+        >
             {[...Array(400)].map((_, i) => (
                 <div
                     key={i}
@@ -63,7 +108,11 @@ const App = () => {
                 <div className="button">
                     <button
                         onClick={togglePlayPause}
-                        className={isPlaying ? 'bg-[#6c8484] text-[#1f1f1f]' : ''}
+                        style={{
+                            ...buttonStyle,
+                            backgroundColor: isPlaying ? 'var(--accent-color)' : 'transparent',
+                            color: isPlaying ? 'var(--bg-color)' : 'var(--text-color)',
+                        }}
                     >
                         {isPlaying ? 'Pause' : 'Play'}
                     </button>
