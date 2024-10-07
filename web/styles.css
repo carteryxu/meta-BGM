@@ -9,29 +9,30 @@
     --secondary-color: #cfd8ef
 }
 
+/* Your custom styles */
 .space-mono-regular {
     font-family: "Space Mono", monospace;
     font-weight: 400;
     font-style: normal;
-  }
-  
-  .space-mono-bold {
+}
+
+.space-mono-bold {
     font-family: "Space Mono", monospace;
     font-weight: 700;
     font-style: normal;
-  }
-  
-  .space-mono-regular-italic {
+}
+
+.space-mono-regular-italic {
     font-family: "Space Mono", monospace;
     font-weight: 400;
     font-style: italic;
-  }
-  
-  .space-mono-bold-italic {
+}
+
+.space-mono-bold-italic {
     font-family: "Space Mono", monospace;
     font-weight: 700;
     font-style: italic;
-  }
+}
 
 body {
     background-color: var(--bg-color);
@@ -41,9 +42,6 @@ body {
     line-height: 1.5;
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     background-image:
         radial-gradient(circle at 10% 20%, rgba(255, 107, 107, .1) 0%, transparent 20%),
@@ -53,10 +51,11 @@ body {
 .container {
     text-align: left;
     padding: 2rem;
-    position: absolute;
-    top: 75%;
-    left: 20%;
-    transform: translate(-50%, -50%);
+    position: fixed;
+    bottom: 4rem;
+    left: 5rem;
+    width: 90%;
+    max-width: 500px;
     background: rgba(26, 26, 26, .8);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
@@ -106,7 +105,7 @@ body {
 button {
     font-family: 'Space Mono', monospace;
     font-size: 1.2rem;
-    padding: .08 rem 2rem;
+    padding: .08rem 2rem;
     background-color: transparent;
     color: var(--text-color);
     border: 2px solid var(--accent-color);
@@ -168,6 +167,12 @@ button:hover {
 }
 
 @media (max-width: 600px) {
+    .container {
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        width: auto;
+    }
     .header {
         font-size:3rem;
     }
@@ -180,4 +185,3 @@ button:hover {
         padding: 0.6rem 1.5rem;
     }
 }
-

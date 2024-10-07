@@ -4,33 +4,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>meta BGM Website</title>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="styles.css">
-
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-        </style>
     </head>
     <body>
-        <div class="container">
-            <main>
-
-                <p2 class="header">meta BGM</p2>
-                <p>endless warm jazz music in the background<p>
-                <div class="button">
-                    <button id="play">Play</button>
-                </div>
-
-                <div class="volume-bar">
-                    <div id="volume-slider-container">
-                        <output id="current-volume-label" for="volume-slider">100%</output>
-						<input id="volume-slider" type="range" min="0" max="100" step="1" />
-                    </div>
-                    
-                </div>
-            </main>
-        </div>
-
-		<script type="module" src="script.js"></script>
+        <div id="root"></div>
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script type="text/babel" src="script.js"></script>
     </body>
-
 </html>
