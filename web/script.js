@@ -4,6 +4,7 @@ const App = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(100);
     const containerRef = useRef(null);
+    const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         const container = containerRef.current;
@@ -24,10 +25,13 @@ const App = () => {
                 const dy = mouseY - dotY;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                const maxDistance = 100;
+                const maxDistance = 40;
                 if (distance < maxDistance) {
+                    const scale = 1.25 + (maxDistance - distance) / maxDistance * 2;
+                    dot.style.transform = `scale(${scale})`;
                     dot.classList.add('active');
                 } else {
+                    dot.style.transform = 'scale(1)';
                     dot.classList.remove('active');
                 }
             });
@@ -35,6 +39,22 @@ const App = () => {
 
         container.addEventListener('mousemove', updateDots);
         return () => container.removeEventListener('mousemove', updateDots);
+    }, []);
+
+    useEffect(() => {
+        const updateContainerSize = () => {
+            if (containerRef.current) {
+                setContainerSize({
+                    width: containerRef.current.clientWidth,
+                    height: containerRef.current.clientHeight,
+                });
+            }
+        };
+
+        updateContainerSize();
+        window.addEventListener('resize', updateContainerSize);
+
+        return () => window.removeEventListener('resize', updateContainerSize);
     }, []);
 
     const togglePlayPause = () => {
@@ -53,6 +73,7 @@ const App = () => {
         left: '5rem',
         width: '90%',
         maxWidth: '500px',
+        overflow: 'hidden',
     };
 
     const mobileStyle = window.matchMedia('(max-width: 600px)').matches
@@ -77,10 +98,19 @@ const App = () => {
         textTransform: 'lowercase',
         letterSpacing: '0.1em',
         transition: 'all 0.3s ease',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        boxShadow: '4px 4px 1px #454f4f',
         width: '120px',  
-        height: '45px',  
+        height: '45px',
+        overflow: 'hidden',
+        position: 'relative',
+        top: '0',
+        left: '0',
     };
+
+    const dotSpacing = 10;
+    const dotsPerRow = Math.floor(containerSize.width / dotSpacing);
+    const dotsPerColumn = Math.floor(containerSize.height / dotSpacing);
+    const totalDots = dotsPerRow * dotsPerColumn;
 
     return (
         <div 
@@ -88,13 +118,13 @@ const App = () => {
             ref={containerRef} 
             style={{...containerStyle, ...mobileStyle}}
         >
-            {[...Array(400)].map((_, i) => (
+            {[...Array(totalDots)].map((_, i) => (
                 <div
                     key={i}
                     className="dot"
                     style={{
-                        left: `${(i % 20) * 25}px`,
-                        top: `${Math.floor(i / 20) * 25}px`,
+                        left: `${(i % dotsPerRow) * dotSpacing}px`,
+                        top: `${Math.floor(i / dotsPerRow) * dotSpacing}px`,
                     }}
                 />
             ))}
