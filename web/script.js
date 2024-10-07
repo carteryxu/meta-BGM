@@ -117,60 +117,72 @@ const App = () => {
     const totalDots = dotsPerRow * dotsPerColumn;
 
     return (
-        <div 
-            className="container" 
-            ref={containerRef} 
-            style={{...containerStyle, ...mobileStyle}}
-        >
-            {[...Array(totalDots)].map((_, i) => (
-                <div
-                    key={i}
-                    className="dot"
-                    style={{
-                        left: `${(i % dotsPerRow) * dotSpacing}px`,
-                        top: `${Math.floor(i / dotsPerRow) * dotSpacing}px`,
-                    }}
-                />
-            ))}
-            <div className="relative z-10">
-                <h1 className="header">
-                    meta BGM
-                </h1>
-                <h2 className="space-mono-regular text-[#cfd8ef] text-xl mb-8">
-                    immerse in endless jazz background music
-                </h2>
-                <div className="button">
-                    <button
-                        onClick={togglePlayPause}
+        <div className="relative min-h-screen">
+            <VinylRecord isPlaying={isPlaying} />
+            <div 
+                className="container" 
+                ref={containerRef} 
+                style={{...containerStyle, ...mobileStyle}}
+            >
+                {[...Array(totalDots)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="dot"
                         style={{
-                            ...buttonStyle,
-                            backgroundColor: isPlaying ? 'var(--accent-color)' : 'transparent',
-                            color: isPlaying ? 'var(--bg-color)' : 'var(--text-color)',
+                            left: `${(i % dotsPerRow) * dotSpacing}px`,
+                            top: `${Math.floor(i / dotsPerRow) * dotSpacing}px`,
                         }}
-                    >
-                        {isPlaying ? 'Pause' : 'Play'}
-                    </button>
-                </div>
-                <div className="volume-bar">
-                    <div id="volume-slider-container">
-                        <input
-                            id="volume-slider"
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={volume}
-                            onChange={handleVolumeChange}
+                    />
+                ))}
+                <div className="relative z-10">
+                    <h1 className="header">
+                        meta BGM
+                    </h1>
+                    <h2 className="space-mono-regular text-[#cfd8ef] text-xl mb-8">
+                        immerse in endless jazz background music
+                    </h2>
+                    <div className="button">
+                        <button
+                            onClick={togglePlayPause}
                             style={{
-                                background: `linear-gradient(to right, var(--text-color) 0%, var(--text-color) ${volume}%, var(--bg-color) ${volume}%, var(--bg-color) 100%)`,
+                                ...buttonStyle,
+                                backgroundColor: isPlaying ? 'var(--accent-color)' : 'transparent',
+                                color: isPlaying ? 'var(--bg-color)' : 'var(--text-color)',
                             }}
-                        />
-                        <div id="current-volume-label">
-                             {volume}%
+                        >
+                            {isPlaying ? 'Pause' : 'Play'}
+                        </button>
+                    </div>
+                    <div className="volume-bar">
+                        <div id="volume-slider-container">
+                            <input
+                                id="volume-slider"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={volume}
+                                onChange={handleVolumeChange}
+                                style={{
+                                    background: `linear-gradient(to right, var(--text-color) 0%, var(--text-color) ${volume}%, var(--bg-color) ${volume}%, var(--bg-color) 100%)`,
+                                }}
+                            />
+                            <div id="current-volume-label">
+                                 {volume}%
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    );
+};
+
+const VinylRecord = ({ isPlaying }) => {
+    return (
+        <div 
+            className="vinyl-record" 
+            style={{ animationPlayState: isPlaying ? 'running' : 'paused'}}
+        />
     );
 };
 
