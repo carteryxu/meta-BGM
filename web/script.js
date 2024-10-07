@@ -137,7 +137,7 @@ const App = () => {
                     meta BGM
                 </h1>
                 <h2 className="space-mono-regular text-[#cfd8ef] text-xl mb-8">
-                    endless warm jazz music in the background
+                    immerse in endless jazz background music
                 </h2>
                 <div className="button">
                     <button
