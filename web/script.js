@@ -62,7 +62,10 @@ const App = () => {
     };
 
     const handleVolumeChange = (e) => {
-        setVolume(Number(e.target.value));
+        const value = Number(e.target.value);
+        setVolume(value);
+        
+        e.target.style.background = `linear-gradient(to right, var(--text-color) 0%, var(--text-color) ${value}%, var(--bg-color) ${value}%, var(--bg-color) 100%)`;
     };
 
     const containerStyle = {
@@ -72,6 +75,7 @@ const App = () => {
         bottom: '4rem',
         left: '5rem',
         width: '90%',
+        height: '300px',
         maxWidth: '500px',
         overflow: 'hidden',
     };
@@ -157,11 +161,11 @@ const App = () => {
                             value={volume}
                             onChange={handleVolumeChange}
                             style={{
-                                background: `linear-gradient(to right, #f2c17b 0%, #f2c17b ${volume}%, #6c8484 ${volume}%, #6c8484 100%)`,
+                                background: `linear-gradient(to right, var(--text-color) 0%, var(--text-color) ${volume}%, var(--bg-color) ${volume}%, var(--bg-color) 100%)`,
                             }}
                         />
                         <div id="current-volume-label">
-                            Volume: {volume}%
+                             {volume}%
                         </div>
                     </div>
                 </div>
