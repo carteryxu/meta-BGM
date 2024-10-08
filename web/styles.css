@@ -9,7 +9,6 @@
     --secondary-color: #cfd8ef
 }
 
-/* Your custom styles */
 .space-mono-regular {
     font-family: "Space Mono", monospace;
     font-weight: 400;
@@ -59,7 +58,6 @@ body {
     background: rgba(26, 26, 26, .8);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-    /* Remove these two lines */
     /* background-image: radial-gradient(#343b3c 1.25px, transparent 0);
     background-size: 13px 13px;
     background-position: -15px -15px; */

@@ -12,7 +12,7 @@ const App = () => {
     useEffect(() => {
         audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
         
-        // Load play sound
+        // Loading play sound
         fetch('/audio/vinylstart.mp3')
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => audioContext.current.decodeAudioData(arrayBuffer))
@@ -20,7 +20,7 @@ const App = () => {
                 playSound.current = audioBuffer;
             });
 
-        // Load pause sound
+        // Loading pause sound
         fetch('/audio/vinylstop.mp3')
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => audioContext.current.decodeAudioData(arrayBuffer))
