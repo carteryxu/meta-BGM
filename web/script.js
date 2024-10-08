@@ -8,6 +8,7 @@ const App = () => {
     const audioContext = useRef(null);
     const playSound = useRef(null);
     const pauseSound = useRef(null);
+    const [audioSource, setAudioSource] = useState(null);
 
     useEffect(() => {
         audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
@@ -27,6 +28,12 @@ const App = () => {
             .then(audioBuffer => {
                 pauseSound.current = audioBuffer;
             });
+
+        // Create audio source
+        const audio = new Audio();
+        // CORS request: browser makes cross-origin request to different domain, ignore security restrictions
+        audio.crossOrigin = 'anonymous';
+        setAudioSource(audio);
     }, []);
 
     useEffect(() => {
@@ -80,6 +87,12 @@ const App = () => {
         return () => window.removeEventListener('resize', updateContainerSize);
     }, []);
 
+    useEffect(() => {
+        if (audioSource) {
+            audioSource.volume = volume / 100;
+        }
+    }, [volume, audioSource]);
+
     const playAudioEffect = (buffer) => {
         if (buffer && audioContext.current) {
             const source = audioContext.current.createBufferSource();
@@ -91,9 +104,12 @@ const App = () => {
 
     const togglePlayPause = () => {
         if (isPlaying) {
+            audioSource.pause();
             playAudioEffect(pauseSound.current);
         } else {
             playAudioEffect(playSound.current);
+            audioSource.src = 'http://localhost:5000/generate-music';
+            audioSource.play();
         }
         setIsPlaying(!isPlaying);
     };
