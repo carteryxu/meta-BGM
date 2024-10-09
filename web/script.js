@@ -108,8 +108,13 @@ const App = () => {
             playAudioEffect(pauseSound.current);
         } else {
             playAudioEffect(playSound.current);
-            audioSource.src = 'http://localhost:5000/generate-music';
-            audioSource.play();
+            fetch('/generate-music')
+                .then(response => response.json())
+                .then(data => {
+                    audioSource.src = data.audioUrl;
+                    audioSource.play();
+                })
+                .catch(error => console.error('Error:', error));
         }
         setIsPlaying(!isPlaying);
     };
