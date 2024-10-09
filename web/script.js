@@ -218,6 +218,7 @@ const App = () => {
 
     return (
         <div className="relative min-h-screen">
+
             <div 
                 className="container" 
                 ref={containerRef} 
