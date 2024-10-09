@@ -5,18 +5,20 @@ const App = () => {
     const [volume, setVolume] = useState(100);
     const containerRef = useRef(null);
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-    const audioContext = useRef(null);
+    const [audioContext, setAudioContext] = useState(null);
     const playSound = useRef(null);
     const pauseSound = useRef(null);
-    const [audioSource, setAudioSource] = useState(null);
+    const [currentSource, setCurrentSource] = useState(null);
+    const [previousSource, setPreviousSource] = useState(null);
 
     useEffect(() => {
-        audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
-        
+        const newAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+        setAudioContext(newAudioContext);
+
         // Loading play sound
         fetch('/audio/vinylstart.mp3')
             .then(response => response.arrayBuffer())
-            .then(arrayBuffer => audioContext.current.decodeAudioData(arrayBuffer))
+            .then(arrayBuffer => newAudioContext.decodeAudioData(arrayBuffer))
             .then(audioBuffer => {
                 playSound.current = audioBuffer;
             });
@@ -24,16 +26,10 @@ const App = () => {
         // Loading pause sound
         fetch('/audio/vinylstop.mp3')
             .then(response => response.arrayBuffer())
-            .then(arrayBuffer => audioContext.current.decodeAudioData(arrayBuffer))
+            .then(arrayBuffer => newAudioContext.decodeAudioData(arrayBuffer))
             .then(audioBuffer => {
                 pauseSound.current = audioBuffer;
             });
-
-        // Create audio source
-        const audio = new Audio();
-        // CORS request: browser makes cross-origin request to different domain, ignore security restrictions
-        audio.crossOrigin = 'anonymous';
-        setAudioSource(audio);
     }, []);
 
     useEffect(() => {
@@ -88,31 +84,75 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        if (audioSource) {
-            audioSource.volume = volume / 100;
+        if (currentSource) {
+            currentSource.gainNode.gain.setValueAtTime(volume / 100, audioContext.currentTime);
         }
-    }, [volume, audioSource]);
+    }, [volume, currentSource]);
+
+    const createSourceAndGainNode = (buffer) => {
+        const source = audioContext.createBufferSource();
+        source.buffer = buffer;
+        const gainNode = audioContext.createGain();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        return { source, gainNode };
+    };
+
+    const fadeAudio = (gainNode, startValue, endValue, duration) => {
+        gainNode.gain.setValueAtTime(startValue, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(endValue, audioContext.currentTime + duration);
+    };
 
     const playAudioEffect = (buffer) => {
-        if (buffer && audioContext.current) {
-            const source = audioContext.current.createBufferSource();
+        if (buffer && audioContext) {
+            const source = audioContext.createBufferSource();
             source.buffer = buffer;
-            source.connect(audioContext.current.destination);
+            source.connect(audioContext.destination);
             source.start();
         }
     };
 
     const togglePlayPause = () => {
         if (isPlaying) {
-            audioSource.pause();
+            if (currentSource) {
+                fadeAudio(currentSource.gainNode, 1, 0, 1);
+                setTimeout(() => currentSource.source.stop(), 1000);
+            }
             playAudioEffect(pauseSound.current);
         } else {
             playAudioEffect(playSound.current);
             fetch('/generate-music')
                 .then(response => response.json())
                 .then(data => {
-                    audioSource.src = data.audioUrl;
-                    audioSource.play();
+                    const loadAudio = (url) => {
+                        return fetch(url)
+                            .then(response => response.arrayBuffer())
+                            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer));
+                    };
+
+                    Promise.all([
+                        loadAudio(data.audioUrl),
+                        data.previousAudio ? loadAudio(`/audio/${data.previousAudio}`) : Promise.resolve(null)
+                    ]).then(([newBuffer, prevBuffer]) => {
+                        if (currentSource) {
+                            fadeAudio(currentSource.gainNode, 1, 0, 1);
+                            setTimeout(() => currentSource.source.stop(), 1000);
+                        }
+
+                        const newSource = createSourceAndGainNode(newBuffer);
+                        setCurrentSource(newSource);
+
+                        if (prevBuffer) {
+                            const prevSource = createSourceAndGainNode(prevBuffer);
+                            setPreviousSource(prevSource);
+                            prevSource.source.start();
+                            fadeAudio(prevSource.gainNode, 1, 0, 2);
+                            setTimeout(() => prevSource.source.stop(), 2000);
+                        }
+
+                        newSource.source.start();
+                        fadeAudio(newSource.gainNode, 0, 1, 2);
+                    });
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -122,7 +162,9 @@ const App = () => {
     const handleVolumeChange = (e) => {
         const value = Number(e.target.value);
         setVolume(value);
-        
+        if (currentSource) {
+            currentSource.gainNode.gain.setValueAtTime(value / 100, audioContext.currentTime);
+        }
         e.target.style.background = `linear-gradient(to right, var(--text-color) 0%, var(--text-color) ${value}%, var(--bg-color) ${value}%, var(--bg-color) 100%)`;
     };
 
@@ -176,7 +218,6 @@ const App = () => {
 
     return (
         <div className="relative min-h-screen">
-            <VinylRecord isPlaying={isPlaying} />
             <div 
                 className="container" 
                 ref={containerRef} 
@@ -232,15 +273,6 @@ const App = () => {
                 </div>
             </div>
         </div>
-    );
-};
-
-const VinylRecord = ({ isPlaying }) => {
-    return (
-        <div 
-            className="vinyl-record" 
-            style={{ animationPlayState: isPlaying ? 'running' : 'paused'}}
-        />
     );
 };
 

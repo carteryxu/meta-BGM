@@ -17,6 +17,8 @@ ws.on('open', function open() {
 });
 
 let audioCounter = 0;
+const recentAudios = [];
+const MAX_RECENT_AUDIOS = 5;
 
 app.get('/generate-music', (req, res) => {
   ws.send('generate');
@@ -29,7 +31,14 @@ app.get('/generate-music', (req, res) => {
         console.error('Error saving audio file:', err);
         res.status(500).send('Error generating audio');
       } else {
-        res.json({ audioUrl: `/audio/${fileName}` });
+        recentAudios.push(fileName);
+        if (recentAudios.length > MAX_RECENT_AUDIOS) {
+          const oldestFile = recentAudios.shift();
+          fs.unlink(path.join(__dirname, 'web', 'audio', oldestFile), (err) => {
+            if (err) console.error('Error deleting old audio file:', err);
+          });
+        }
+        res.json({ audioUrl: `/audio/${fileName}`, previousAudio: recentAudios[recentAudios.length - 2] });
       }
     });
   });
